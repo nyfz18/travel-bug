@@ -1,5 +1,6 @@
 import { useState } from "react";
 import DestinationsList from "./components/DestinationsList";
+import { fetchSuggestions } from "./api";
 import "./style/App.css";
 
 function App() {
@@ -12,18 +13,24 @@ function App() {
   });
   const [visitedCountries, setVisitedCountries] = useState("");
   const [submitted, setSubmitted] = useState(false);
+  const [suggestedDestinations, setSuggestedDestinations] = useState([]);
 
   const handleCheckboxChange = (e) => {
     const { name, checked } = e.target;
-    setPreferences((prev) => ({
-      ...prev,
-      [name]: checked,
-    }));
+    setPreferences((prev) => ({ ...prev, [name]: checked }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setSubmitted(true);
+
+    try {
+      const suggestions = await fetchSuggestions(preferences, visitedCountries);
+      setSuggestedDestinations(suggestions);
+    } catch (err) {
+      console.error("Error fetching suggestions:", err);
+      setSuggestedDestinations([]);
+    }
   };
 
   return (
@@ -39,45 +46,20 @@ function App() {
             onChange={(e) => setName(e.target.value)}
           />
 
-      <h3>Preferences:</h3>
-      <div className="checkbox-group">
-        <label>
-          <input
-            type="checkbox"
-            name="beach"
-            checked={preferences.beach}
-            onChange={handleCheckboxChange}
-          />
-          Beach
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            name="mountains"
-            checked={preferences.mountains}
-            onChange={handleCheckboxChange}
-          />
-          Mountains
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            name="city"
-            checked={preferences.city}
-            onChange={handleCheckboxChange}
-          />
-          City
-        </label>
-        <label>
-          <input
-            type="checkbox"
-            name="adventure"
-            checked={preferences.adventure}
-            onChange={handleCheckboxChange}
-          />
-          Adventure
-        </label>
-      </div>
+          <h3>Preferences:</h3>
+          <div className="checkbox-group">
+            {["beach", "mountains", "city", "adventure"].map((pref) => (
+              <label key={pref}>
+                <input
+                  type="checkbox"
+                  name={pref}
+                  checked={preferences[pref]}
+                  onChange={handleCheckboxChange}
+                />
+                {pref.charAt(0).toUpperCase() + pref.slice(1)}
+              </label>
+            ))}
+          </div>
 
           <h3>Previously Visited Countries:</h3>
           <textarea
@@ -86,15 +68,18 @@ function App() {
             onChange={(e) => setVisitedCountries(e.target.value)}
           ></textarea>
 
-          <button type="submit">Submit</button>
+          <div>
+            <button type="submit">Submit</button>
+          </div>
         </form>
       ) : (
         <div>
           <h2>Hello, {name}!</h2>
+
           <p>Your preferences:</p>
           <ul>
             {Object.entries(preferences)
-              .filter(([_, value]) => value)
+              .filter(([_, val]) => val)
               .map(([key]) => (
                 <li key={key}>{key.charAt(0).toUpperCase() + key.slice(1)}</li>
               ))}
@@ -102,13 +87,21 @@ function App() {
 
           <p>Countries you’ve visited:</p>
           <ul>
-            {visitedCountries.split(",").map((country, index) => (
-              <li key={index}>{country.trim()}</li>
-            ))}
+            {visitedCountries
+              .split(",")
+              .map((c, i) => c.trim())
+              .filter((c) => c)
+              .map((country, i) => (
+                <li key={i}>{country}</li>
+              ))}
           </ul>
 
           <h3>Suggested Destinations:</h3>
-          <DestinationsList />
+          {suggestedDestinations.length > 0 ? (
+            <DestinationsList destinations={suggestedDestinations} />
+          ) : (
+            <p>No suggestions available.</p>
+          )}
         </div>
       )}
     </div>

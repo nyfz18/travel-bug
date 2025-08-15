@@ -1,19 +1,29 @@
-from fastapi import FastAPI, Depends
-from sqlalchemy.orm import Session
-from .database import get_db, engine
-from . import models
+from dotenv import load_dotenv
+from fastapi import FastAPI
+from fastapi.middleware.cors import CORSMiddleware
+from pydantic import BaseModel
+import os
 
 app = FastAPI()
 
-# Create tables
-models.Base.metadata.create_all(bind=engine)
+# CORS setup for React frontend
+app.add_middleware(
+    CORSMiddleware,
+    allow_origins=["http://localhost:3000"],
+    allow_credentials=True,
+    allow_methods=["*"],
+    allow_headers=["*"],
+)
 
-@app.get("/users")
-def read_users(db: Session = Depends(get_db)):
-    users = db.query(models.User).all()
-    return users
+class PreferencesInput(BaseModel):
+    preferences: dict
+    visitedCountries: str
+    
+@app.post("/suggestions")
+async def get_suggestions(data: PreferencesInput):
+    print("HERE") #Debug
+    print("Received data:", data)
+    prefs = [k for k, v in data.preferences.items() if v]
+    visited = data.visitedCountries
 
-@app.get("/destinations")
-def read_destinations(db: Session = Depends(get_db)):
-    destinations = db.query(models.Destination).all()
-    return destinations 
+# need to continue...
