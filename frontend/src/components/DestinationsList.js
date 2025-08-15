@@ -1,27 +1,21 @@
-import { useEffect, useState } from "react";
-import { fetchDestinations } from "../api";
+export default function DestinationsList({ destinations }) {
+  const safeDestinations = Array.isArray(destinations) ? destinations : [];
 
-export default function DestinationsList() {
-  const [destinations, setDestinations] = useState([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    fetchDestinations()
-      .then(data => setDestinations(data))
-      .catch(err => console.error(err))
-      .finally(() => setLoading(false));
-  }, []);
-
-  if (loading) return <p>Loading destinations...</p>;
+  if (safeDestinations.length === 0) {
+    return (
+      <div className="destinations-list">
+        <h2>Destinations</h2>
+        <p>No destinations to show.</p>
+      </div>
+    );
+  }
 
   return (
-    <div>
+    <div className="destinations-list">
       <h2>Destinations</h2>
       <ul>
-        {destinations.map(dest => (
-          <li key={dest.destination_id}>
-            {dest.name}, {dest.country} - {dest.type}
-          </li>
+        {safeDestinations.map((dest, index) => (
+          <li key={index}>{dest}</li>
         ))}
       </ul>
     </div>
