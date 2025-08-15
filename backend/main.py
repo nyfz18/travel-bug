@@ -1,12 +1,12 @@
 from fastapi import FastAPI, Depends
 from sqlalchemy.orm import Session
-from database import get_db
-import models
+from .database import get_db, engine
+from . import models
 
 app = FastAPI()
 
-# Optional: create tables from models
-models.Base.metadata.create_all(bind=models.engine)
+# Create tables
+models.Base.metadata.create_all(bind=engine)
 
 @app.get("/users")
 def read_users(db: Session = Depends(get_db)):
@@ -16,4 +16,4 @@ def read_users(db: Session = Depends(get_db)):
 @app.get("/destinations")
 def read_destinations(db: Session = Depends(get_db)):
     destinations = db.query(models.Destination).all()
-    return destinations
+    return destinations 
