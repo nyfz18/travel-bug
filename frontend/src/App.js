@@ -104,7 +104,7 @@ function App() {
               ))}
           </ul>
 
-          <p>Countries you’ve visited:</p>
+          <p>Favorite countries you’ve visited:</p>
           <ul>
             {visitedCountries
               .split(",")
