@@ -10,8 +10,10 @@ function App() {
     mountains: false,
     city: false,
     adventure: false,
+    culture: false,
   });
   const [visitedCountries, setVisitedCountries] = useState("");
+  const [maxBudget, setMaxBudget] = useState("");
   const [submitted, setSubmitted] = useState(false);
   const [suggestedDestinations, setSuggestedDestinations] = useState([]);
 
@@ -25,7 +27,7 @@ function App() {
     setSubmitted(true);
 
     try {
-      const suggestions = await fetchSuggestions(preferences, visitedCountries);
+      const suggestions = await fetchSuggestions(preferences, visitedCountries, maxBudget);
       setSuggestedDestinations(suggestions);
     } catch (err) {
       console.error("Error fetching suggestions:", err);
@@ -48,7 +50,7 @@ function App() {
 
           <h3>Preferences:</h3>
           <div className="checkbox-group">
-            {["beach", "mountains", "city", "adventure"].map((pref) => (
+            {["beach", "mountains", "city", "adventure", "culture"].map((pref) => (
               <label key={pref}>
                 <input
                   type="checkbox"
@@ -60,6 +62,14 @@ function App() {
               </label>
             ))}
           </div>
+
+          <h3>Maximum Budget (USD):</h3>
+          <input
+            type="number"
+            placeholder="Max Budget"
+            value={maxBudget}
+            onChange={(e) => setMaxBudget(Number(e.target.value))}
+          />
 
           <h3>Previously Visited Countries:</h3>
           <textarea
@@ -89,12 +99,14 @@ function App() {
           <ul>
             {visitedCountries
               .split(",")
-              .map((c, i) => c.trim())
+              .map((c) => c.trim())
               .filter((c) => c)
               .map((country, i) => (
                 <li key={i}>{country}</li>
               ))}
           </ul>
+
+          <p>Maximum budget: ${maxBudget}</p>
 
           <h3>Suggested Destinations:</h3>
           {suggestedDestinations.length > 0 ? (
