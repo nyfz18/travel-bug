@@ -27,12 +27,21 @@ function App() {
     setSubmitted(true);
 
     try {
-      const suggestions = await fetchSuggestions(preferences, visitedCountries, maxBudget);
+      const suggestions = await fetchSuggestions(preferences, visitedCountries, Number(maxBudget));
       setSuggestedDestinations(suggestions);
     } catch (err) {
       console.error("Error fetching suggestions:", err);
       setSuggestedDestinations([]);
     }
+  };
+
+  const handleReset = () => {
+    setName("");
+    setPreferences({ beach: false, mountains: false, city: false, adventure: false, culture: false });
+    setVisitedCountries("");
+    setMaxBudget("");
+    setSubmitted(false);
+    setSuggestedDestinations([]);
   };
 
   return (
@@ -63,20 +72,20 @@ function App() {
             ))}
           </div>
 
-          <h3>Maximum Budget (USD):</h3>
-          <input
-            type="number"
-            placeholder="Max Budget"
-            value={maxBudget}
-            onChange={(e) => setMaxBudget(Number(e.target.value))}
-          />
-
           <h3>Previously Visited Countries:</h3>
           <textarea
             placeholder="Separate countries with commas"
             value={visitedCountries}
             onChange={(e) => setVisitedCountries(e.target.value)}
           ></textarea>
+
+          <h3>Maximum Budget (USD):</h3>
+          <input
+            type="number"
+            placeholder="e.g., 2500"
+            value={maxBudget}
+            onChange={(e) => setMaxBudget(e.target.value)}
+          />
 
           <div>
             <button type="submit">Submit</button>
@@ -106,7 +115,7 @@ function App() {
               ))}
           </ul>
 
-          <p>Maximum budget: ${maxBudget}</p>
+          <p>Maximum Budget: ${maxBudget}</p>
 
           <h3>Suggested Destinations:</h3>
           {suggestedDestinations.length > 0 ? (
@@ -114,6 +123,10 @@ function App() {
           ) : (
             <p>No suggestions available.</p>
           )}
+
+          <div>
+            <button onClick={handleReset}>Reset</button>
+          </div>
         </div>
       )}
     </div>
