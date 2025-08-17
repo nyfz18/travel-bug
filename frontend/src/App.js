@@ -144,7 +144,7 @@ function App() {
             {suggestedDestinations.length > 0 ? (
               <DestinationsList destinations={suggestedDestinations} />
             ) : (
-              <p className="no-results">No suggestions available.</p>
+              <p className="no-results">Loading...</p>
             )}
 
             <button onClick={handleReset} className="btn-secondary">
