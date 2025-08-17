@@ -4,7 +4,7 @@ export default function DestinationsList({ destinations }) {
   if (safeDestinations.length === 0) {
     return (
       <div className="destinations-list">
-        <h2>Destinations</h2>
+        <h2>Suggested Destinations</h2>
         <p>No destinations to show.</p>
       </div>
     );
@@ -12,12 +12,14 @@ export default function DestinationsList({ destinations }) {
 
   return (
     <div className="destinations-list">
-      <h2>Destinations</h2>
-      <ul>
+      <h2>Suggested Destinations</h2>
+      <div className="destinations-grid">
         {safeDestinations.map((dest, index) => (
-          <li key={index}>{dest}</li>
+          <div key={index} className="destination-card">
+            <p>{dest}</p>
+          </div>
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

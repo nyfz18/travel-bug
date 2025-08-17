@@ -1,72 +1,189 @@
 .app-container {
-  max-width: 600px;
-  margin: 0 auto;
-  padding: 20px;
-  font-family: Arial, sans-serif;
+  min-height: 100vh;
+  background: linear-gradient(to bottom right, #4a90e2, #50c9c3);
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  align-items: center;      
+  padding: 40px 20px;
+  font-family: "Poppins", sans-serif;
+  color: #333;
+}
+
+.app-header {
+  text-align: center;
+  color: white;
+  margin-bottom: 25px; 
+}
+
+.app-header h1 {
+  font-size: 2.5rem;
+  margin-bottom: 5px;
+}
+
+.app-header p {
+  font-size: 1.1rem;
+  opacity: 0.9;
+}
+
+/* Card Styling */
+.card {
+  background: white;
+  border-radius: 15px;
+  box-shadow: 0px 6px 18px rgba(0, 0, 0, 0.15);
+  padding: 30px;
+  width: 100%;
+  max-width: 600px; 
+  animation: fadeIn 0.6s ease-in-out;
+}
+
+.form {
+  display: flex;
+  flex-direction: column;
+}
+
+.form h3 {
+  margin: 15px 0 10px;
+  color: #4a90e2;
+  font-size: 1.1rem;
+  font-weight: 600;
   text-align: center;
 }
 
-input[type="text"], textarea {
-  width: 80%;
-  padding: 10px;
-  margin: 10px 0;
-  border-radius: 5px;
+input[type="text"],
+input[type="number"],
+textarea {
+  width: 100%;
+  box-sizing: border-box; 
+  padding: 12px 14px;
+  margin: 10px 0 20px 0;
+  border-radius: 10px;
   border: 1px solid #ccc;
+  font-family: "Poppins", sans-serif;
+  font-size: 1rem;
+  transition: all 0.2s;
 }
 
-button {
-  padding: 10px 20px;
-  margin-top: 15px;
-  background-color: #4A90E2;
-  color: white;
-  border: none;
-  border-radius: 5px;
-  cursor: pointer;
-}
-
-button:hover {
-  background-color: #357ABD;
+input:focus,
+textarea:focus {
+  border-color: #4a90e2;
+  box-shadow: 0px 0px 8px rgba(74, 144, 226, 0.4);
+  outline: none;
 }
 
 .checkbox-group {
   display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin: 15px 0 20px;
   justify-content: center;
-  gap: 15px;
-  margin-bottom: 15px;
 }
 
-.checkbox-group label {
+.checkbox {
   display: flex;
   align-items: center;
-  gap: 5px;
+  background: #f7f7f7;
+  padding: 8px 12px;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: transform 0.2s, background 0.2s;
 }
 
-ul {
-  list-style-type: none;
-  padding-left: 0;
+.checkbox:hover {
+  transform: scale(1.05);
+  background: #eef6ff;
 }
 
-li {
-  background: #f2f2f2;
-  margin: 5px 0;
-  padding: 8px 10px;
-  border-radius: 5px;
-  display: inline-block;
-  margin-right: 5px;
+.checkbox input {
+  margin-right: 6px;
 }
 
 button {
-  display: block;
+  display: inline-block;
+  font-size: 1rem;
+  padding: 12px 24px;
   margin: 15px auto 0 auto;
-  padding: 10px 20px;
-  background-color: #4A90E2;
-  color: white;
   border: none;
-  border-radius: 5px;
+  border-radius: 12px;
   cursor: pointer;
+  transition: all 0.2s;
 }
 
-button:hover {
-  background-color: #357ABD;
+.btn-primary {
+  background: #4a90e2;
+  color: white;
+  font-weight: 600;
 }
 
+.btn-primary:hover {
+  background: #357abd;
+  transform: translateY(-2px);
+}
+
+.btn-secondary {
+  background: #eee;
+  color: #333;
+  font-weight: 500;
+}
+
+.btn-secondary:hover {
+  background: #ddd;
+  transform: translateY(-2px);
+}
+
+.results {
+  text-align: center;
+}
+
+.results h2 {
+  margin-bottom: 15px;
+  color: #4a90e2;
+}
+
+.results section {
+  margin-bottom: 20px;
+}
+
+.tag-list {
+  list-style: none;
+  padding-left: 0;
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+  justify-content: center;
+}
+
+.tag {
+  background: #e8f3ff;
+  color: #357abd;
+  padding: 6px 12px;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.budget {
+  margin: 20px 0;
+}
+
+.no-results {
+  color: #888;
+  font-style: italic;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(15px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.destinations-list ul {
+  list-style-type: none;
+  padding-left: 0;
+  margin: 0;
+}

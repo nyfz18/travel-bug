@@ -27,7 +27,11 @@ function App() {
     setSubmitted(true);
 
     try {
-      const suggestions = await fetchSuggestions(preferences, visitedCountries, Number(maxBudget));
+      const suggestions = await fetchSuggestions(
+        preferences,
+        visitedCountries,
+        Number(maxBudget)
+      );
       setSuggestedDestinations(suggestions);
     } catch (err) {
       console.error("Error fetching suggestions:", err);
@@ -37,7 +41,13 @@ function App() {
 
   const handleReset = () => {
     setName("");
-    setPreferences({ beach: false, mountains: false, city: false, adventure: false, culture: false });
+    setPreferences({
+      beach: false,
+      mountains: false,
+      city: false,
+      adventure: false,
+      culture: false,
+    });
     setVisitedCountries("");
     setMaxBudget("");
     setSubmitted(false);
@@ -46,89 +56,103 @@ function App() {
 
   return (
     <div className="app-container">
-      <h1>Travel Bug</h1>
+      <header className="app-header">
+        <h1>Travel Bug</h1>
+        <p>Find your next dream destination!</p>
+      </header>
 
-      {!submitted ? (
-        <form onSubmit={handleSubmit}>
-          <input
-            type="text"
-            placeholder="Your Name"
-            value={name}
-            onChange={(e) => setName(e.target.value)}
-          />
+      <div className="card">
+        {!submitted ? (
+          <form onSubmit={handleSubmit} className="form">
+            <input
+              type="text"
+              placeholder="Your Name"
+              value={name}
+              onChange={(e) => setName(e.target.value)}
+            />
 
-          <h3>Preferences:</h3>
-          <div className="checkbox-group">
-            {["beach", "mountains", "city", "adventure", "culture"].map((pref) => (
-              <label key={pref}>
-                <input
-                  type="checkbox"
-                  name={pref}
-                  checked={preferences[pref]}
-                  onChange={handleCheckboxChange}
-                />
-                {pref.charAt(0).toUpperCase() + pref.slice(1)}
-              </label>
-            ))}
+            <h3>Choose Your Preferences:</h3>
+            <div className="checkbox-group">
+              {["beach", "mountains", "city", "adventure", "culture"].map(
+                (pref) => (
+                  <label key={pref} className="checkbox">
+                    <input
+                      type="checkbox"
+                      name={pref}
+                      checked={preferences[pref]}
+                      onChange={handleCheckboxChange}
+                    />
+                    <span>{pref.charAt(0).toUpperCase() + pref.slice(1)}</span>
+                  </label>
+                )
+              )}
+            </div>
+
+            <h3>Favorite Previously Visited Countries:</h3>
+            <textarea
+              placeholder="Separate countries with commas"
+              value={visitedCountries}
+              onChange={(e) => setVisitedCountries(e.target.value)}
+            ></textarea>
+
+            <h3>Maximum Budget (USD):</h3>
+            <input
+              type="number"
+              placeholder="e.g., 2500"
+              value={maxBudget}
+              onChange={(e) => setMaxBudget(e.target.value)}
+            />
+
+            <button type="submit" className="btn-primary">
+              Get Suggestions! 
+            </button>
+          </form>
+        ) : (
+          <div className="results">
+            <h2>Hello, {name}! 👋</h2>
+
+            <section>
+              <h4>Your Preferences:</h4>
+              <ul className="tag-list">
+                {Object.entries(preferences)
+                  .filter(([_, val]) => val)
+                  .map(([key]) => (
+                    <li key={key} className="tag">
+                      {key.charAt(0).toUpperCase() + key.slice(1)}
+                    </li>
+                  ))}
+              </ul>
+            </section>
+
+            <section>
+              <h4>Your Favorite Visited Countries:</h4>
+              <ul className="tag-list">
+                {visitedCountries
+                  .split(",")
+                  .map((c) => c.trim())
+                  .filter((c) => c)
+                  .map((country, i) => (
+                    <li key={i} className="tag">
+                      {country}
+                    </li>
+                  ))}
+              </ul>
+            </section>
+
+            <p className="budget"><b>Max Budget:</b> ${maxBudget}</p> 
+
+            {suggestedDestinations.length > 0 ? (
+              <DestinationsList destinations={suggestedDestinations} />
+            ) : (
+              <p className="no-results">No suggestions available.</p>
+            )}
+
+            <button onClick={handleReset} className="btn-secondary">
+              Start Over
+            </button>
           </div>
-
-          <h3>Previously Visited Countries:</h3>
-          <textarea
-            placeholder="Separate countries with commas"
-            value={visitedCountries}
-            onChange={(e) => setVisitedCountries(e.target.value)}
-          ></textarea>
-
-          <h3>Maximum Budget (USD):</h3>
-          <input
-            type="number"
-            placeholder="e.g., 2500"
-            value={maxBudget}
-            onChange={(e) => setMaxBudget(e.target.value)}
-          />
-
-          <div>
-            <button type="submit">Submit</button>
-          </div>
-        </form>
-      ) : (
-        <div>
-          <h2>Hello, {name}!</h2>
-
-          <p>Your preferences:</p>
-          <ul>
-            {Object.entries(preferences)
-              .filter(([_, val]) => val)
-              .map(([key]) => (
-                <li key={key}>{key.charAt(0).toUpperCase() + key.slice(1)}</li>
-              ))}
-          </ul>
-
-          <p>Favorite countries you’ve visited:</p>
-          <ul>
-            {visitedCountries
-              .split(",")
-              .map((c) => c.trim())
-              .filter((c) => c)
-              .map((country, i) => (
-                <li key={i}>{country}</li>
-              ))}
-          </ul>
-
-          <p>Maximum Budget: ${maxBudget}</p>
-
-          <h3>Suggested Destinations:</h3>
-          {suggestedDestinations.length > 0 ? (
-            <DestinationsList destinations={suggestedDestinations} />
-          ) : (
-            <p>No suggestions available.</p>
-          )}
-
-          <div>
-            <button onClick={handleReset}>Reset</button>
-          </div>
-        </div>
-      )}
+        )}
+      </div>
     </div>
   );
 }
